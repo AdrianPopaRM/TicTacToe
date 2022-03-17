@@ -69,15 +69,6 @@ public class Game {
     private void gameStep(Player player) {
         if(gameStatus.areThereMoreMovesPossible(this.gameBoard)) {
             gameBoard.insertInChosenPosition(getNextValidPosition(player), player);
-//            return;
         }
     }
-
-    //    private int getNextAvailablePosition(Player player){
-//        int playerChosenMove=userInput.getNextPosition(player);
-//        while(!gameBoard.positionAvailable(playerChosenMove)){
-//            playerChosenMove=userInput.getNextPosition(player);
-//        }
-//
-//    }
 }
