@@ -1,23 +1,50 @@
 package Xsi0;
 
 public class Game {
-    private GameStatus gameStatus=new GameStatus();
+    private GameStatus gameStatus = new GameStatus();
     private Player firstPlayer;
     private Player secondPlayer;
     public UserInput userInput = new UserInput();
-    private GameBoard gameBoard=new GameBoard();
-    private Graphics graphics=new Graphics();
+    private GameBoard gameBoard = new GameBoard();
+    private Graphics graphics = new Graphics();
+    private ComputerPlayer computerPlayer;
 
     public Game(Player player1, Player player2) {
         randomFirstPlayer(player1, player2);
         System.out.println("First player randomly assigned is " + getFirstPlayer().getName() + ". I wish you both good luck.");
     }
 
-    public void play() {
-        while (gameStatus.areThereMoreMovesPossible(gameBoard)&&!gameStatus.gameOver(this.gameBoard)){
+    public Game(Player player1) {
+        this.firstPlayer = player1;
+        player1.setQuePosition(1);
+        this.computerPlayer = new ComputerPlayer(this.gameStatus, this.gameBoard);
+    }
+
+    public void playVsComputer() {
+        while (gameStatus.areThereMoreMovesPossible(gameBoard) && !gameStatus.gameOver(gameBoard)) {
             graphics.displayTheBoard(gameBoard);
             gameStep(firstPlayer);
-            if(!gameStatus.gameOver(this.gameBoard)){
+            if (!gameStatus.gameOver(this.gameBoard)) {
+                graphics.displayTheBoard(gameBoard);
+                if (gameStatus.areThereMoreMovesPossible(this.gameBoard)) {
+                    gameBoard.insertInChosenPosition(computerPlayer.getNextMove(), computerPlayer);
+                }
+            }
+        }
+        graphics.displayTheBoard(gameBoard);
+        if (gameStatus.gameConclusions(gameBoard) == 1) {
+            System.out.println("Player " + firstPlayer.getName() + " won! Congratulations");
+        }
+        if (gameStatus.gameConclusions(gameBoard) == 2) {
+            System.out.println("Computer won, better luck next time !");
+        }
+    }
+
+    public void play() {
+        while (gameStatus.areThereMoreMovesPossible(gameBoard) && !gameStatus.gameOver(this.gameBoard)) {
+            graphics.displayTheBoard(gameBoard);
+            gameStep(firstPlayer);
+            if (!gameStatus.gameOver(this.gameBoard)) {
                 graphics.displayTheBoard(gameBoard);
                 gameStep(secondPlayer);
             }
@@ -50,25 +77,18 @@ public class Game {
         player1.setQuePosition(2);
     }
 
-    private int getNextValidPosition(Player player) {
-        int currentPlayerInput = userInput.getNextPosition(player);
-        while (!gameBoard.checkIfPositionAvailable(currentPlayerInput)) {
-            System.out.println("The move you tried to make was already made, try another one");
-            currentPlayerInput = userInput.getNextPosition(player);
+    private void gameFinale() {
+        if (gameStatus.gameConclusions(gameBoard) == 1) {
+            System.out.println("Player " + firstPlayer.getName() + " won! Congratulations");
         }
-        return currentPlayerInput;
-    }
-    private void gameFinale(){
-        if(gameStatus.gameConclusions(gameBoard)==1){
-            System.out.println("Player "+firstPlayer.getName()+" won! Congratulations");
-        }
-        if(gameStatus.gameConclusions(gameBoard)==2){
-            System.out.println("Player "+secondPlayer.getName()+" won! Congratulations");
+        if (gameStatus.gameConclusions(gameBoard) == 2) {
+            System.out.println("Player " + secondPlayer.getName() + " won! Congratulations");
         }
     }
+
     private void gameStep(Player player) {
-        if(gameStatus.areThereMoreMovesPossible(this.gameBoard)) {
-            gameBoard.insertInChosenPosition(getNextValidPosition(player), player);
+        if (gameStatus.areThereMoreMovesPossible(this.gameBoard)) {
+            gameBoard.insertInChosenPosition(gameBoard.getNextValidPosition(player, userInput), player);
         }
     }
 }

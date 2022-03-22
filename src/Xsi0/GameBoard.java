@@ -15,13 +15,23 @@ public class GameBoard {
         }
         return gameBoard;
     }
-
+    public int getNextValidPosition(Player player,UserInput userInput) {
+        int currentPlayerInput = userInput.getNextPosition(player);
+        while (!this.checkIfPositionAvailable(currentPlayerInput)) {
+            System.out.println("The move you tried to make was already made, try another one");
+            currentPlayerInput = userInput.getNextPosition(player);
+        }
+        return currentPlayerInput;
+    }
     public int[][] getGameBoard() {
         return gameBoard;
     }
 
     public void insertInChosenPosition(int position, Player player) {
         this.gameBoard[position / 10][position % 10] = player.getQuePosition();
+    }
+    public void insertInChosenPosition(int position, ComputerPlayer player) {
+        this.gameBoard[position / 10][position % 10] = 2;
     }
 
     public boolean checkIfPositionAvailable(int position) {
