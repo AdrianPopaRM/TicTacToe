@@ -8,6 +8,7 @@ public class Game {
     private GameBoard gameBoard = new GameBoard();
     private Graphics graphics = new Graphics();
     private ComputerPlayer computerPlayer;
+    private Xsi0Frame frame;
 
     public Game(Player player1, Player player2) {
         randomFirstPlayer(player1, player2);
@@ -20,36 +21,38 @@ public class Game {
         this.computerPlayer = new ComputerPlayer(this.gameStatus, this.gameBoard);
     }
 
-    public void playVsComputer() {
-        while (gameStatus.areThereMoreMovesPossible(gameBoard) && !gameStatus.gameOver(gameBoard)) {
-            graphics.displayTheBoard(gameBoard);
-            gameStep(firstPlayer);
-            if (!gameStatus.gameOver(this.gameBoard)) {
-                graphics.displayTheBoard(gameBoard);
-                if (gameStatus.areThereMoreMovesPossible(this.gameBoard)) {
-                    gameBoard.insertInChosenPosition(computerPlayer.getNextMove(), computerPlayer);
-                }
-            }
-        }
-        graphics.displayTheBoard(gameBoard);
-        if (gameStatus.gameConclusions(gameBoard) == 1) {
-            System.out.println("Player " + firstPlayer.getName() + " won! Congratulations");
-        }
-        if (gameStatus.gameConclusions(gameBoard) == 2) {
-            System.out.println("Computer won, better luck next time !");
-        }
-    }
+//    public void playVsComputer() {
+//        while (gameStatus.areThereMoreMovesPossible(gameBoard) && !gameStatus.gameOver(gameBoard)) {
+//            graphics.displayTheBoard(gameBoard);
+//            gameStep(firstPlayer);
+//            if (!gameStatus.gameOver(this.gameBoard)) {
+//                graphics.displayTheBoard(gameBoard);
+//                if (gameStatus.areThereMoreMovesPossible(this.gameBoard)) {
+//                    gameBoard.insertInChosenPosition(computerPlayer.getNextMove(), computerPlayer);
+//                }
+//            }
+//        }
+//        graphics.displayTheBoard(gameBoard);
+//        if (gameStatus.gameConclusions(gameBoard) == 1) {
+//            System.out.println("Player " + firstPlayer.getName() + " won! Congratulations");
+//        }
+//        if (gameStatus.gameConclusions(gameBoard) == 2) {
+//            System.out.println("Computer won, better luck next time !");
+//        }
+//    }
 
     public void play() {
         while (gameStatus.areThereMoreMovesPossible(gameBoard) && !gameStatus.gameOver(this.gameBoard)) {
-            graphics.displayTheBoard(gameBoard);
+            frame=new Xsi0Frame(gameBoard);
+            frame.setVisible(true);
             gameStep(firstPlayer);
+            frame.redraw();
             if (!gameStatus.gameOver(this.gameBoard)) {
-                graphics.displayTheBoard(gameBoard);
                 gameStep(secondPlayer);
+                frame.redraw();
             }
         }
-        graphics.displayTheBoard(gameBoard);
+        frame.redraw();
         gameFinale();
     }
 
